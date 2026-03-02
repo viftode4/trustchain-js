@@ -1,5 +1,10 @@
 /**
- * Discover the trustchain-node binary location.
+ * Download the trustchain-node binary from GitHub Releases.
+ * Uses only Node 20+ built-ins (fetch, fs, zlib).
+ */
+export declare function ensureBinary(explicitPath?: string): Promise<string>;
+/**
+ * Discover the trustchain-node binary location (synchronous).
  * Search order: explicit path → PATH lookup → ~/.trustchain/bin/
  */
 export declare function findBinary(explicitPath?: string): string;

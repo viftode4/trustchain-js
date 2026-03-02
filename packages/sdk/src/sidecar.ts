@@ -4,7 +4,7 @@ import { TrustChainClient } from "./client.js";
 import {
 	PORT_HTTP_OFFSET,
 	PORT_PROXY_OFFSET,
-	findBinary,
+	ensureBinary,
 	findFreePortBase,
 } from "./utils.js";
 import type {
@@ -78,7 +78,7 @@ export class TrustChainSidecar {
 	async start(): Promise<void> {
 		if (this._running) return;
 
-		const binary = findBinary(this.options.binary);
+		const binary = await ensureBinary(this.options.binary);
 		this._portBase = this.options.portBase ?? (await findFreePortBase());
 
 		const args = [

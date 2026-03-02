@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { SidecarError } from "./errors.js";
 import { TrustChainClient } from "./client.js";
-import { PORT_HTTP_OFFSET, PORT_PROXY_OFFSET, findBinary, findFreePortBase, } from "./utils.js";
+import { PORT_HTTP_OFFSET, PORT_PROXY_OFFSET, ensureBinary, findFreePortBase, } from "./utils.js";
 const PUBKEY_REGEX = /Public key:\s*([0-9a-fA-F]{64})/;
 const READY_TIMEOUT_MS = 10_000;
 const POLL_INITIAL_MS = 100;
@@ -46,7 +46,7 @@ export class TrustChainSidecar {
     async start() {
         if (this._running)
             return;
-        const binary = findBinary(this.options.binary);
+        const binary = await ensureBinary(this.options.binary);
         this._portBase = this.options.portBase ?? (await findFreePortBase());
         const args = [
             "sidecar",

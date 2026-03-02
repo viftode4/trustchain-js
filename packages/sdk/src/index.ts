@@ -2,7 +2,7 @@ export { TrustChainClient } from "./client.js";
 export { TrustChainSidecar } from "./sidecar.js";
 export * from "./types.js";
 export * from "./errors.js";
-export { findBinary, findFreePortBase } from "./utils.js";
+export { findBinary, ensureBinary, findFreePortBase } from "./utils.js";
 export {
 	MAX_DELEGATION_TTL_MS,
 	validateSubDelegationScope,
