@@ -1,13 +1,13 @@
 import { describe, expect, it } from "bun:test";
-import {
-	findBinary,
-	findFreePortBase,
-	PORT_HTTP_OFFSET,
-	PORT_PROXY_OFFSET,
-	PORTS_NEEDED,
-} from "../src/utils.js";
 import { BinaryNotFoundError } from "../src/errors.js";
 import { TrustChainSidecar } from "../src/sidecar.js";
+import {
+	PORTS_NEEDED,
+	PORT_HTTP_OFFSET,
+	PORT_PROXY_OFFSET,
+	findBinary,
+	findFreePortBase,
+} from "../src/utils.js";
 
 describe("findBinary", () => {
 	it("throws BinaryNotFoundError for explicit nonexistent path", () => {

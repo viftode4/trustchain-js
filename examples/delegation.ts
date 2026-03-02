@@ -30,8 +30,8 @@ async function main() {
 	console.log(`Child started — pubkey: ${child.pubkey}`);
 
 	// Register each other as peers
-	await parent.registerPeer(child.pubkey!, `127.0.0.1:18204`);
-	await child.registerPeer(parent.pubkey!, `127.0.0.1:18200`);
+	await parent.registerPeer(child.pubkey!, "127.0.0.1:18204");
+	await child.registerPeer(parent.pubkey!, "127.0.0.1:18200");
 
 	// Parent delegates to child
 	console.log("\nDelegating authority...");

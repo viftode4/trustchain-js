@@ -1,7 +1,7 @@
+import { createHooks } from "./hooks.js";
 import type { PluginContext, PluginRegistration } from "./openclaw-types.js";
 import { SidecarService } from "./service.js";
 import { createTools } from "./tools.js";
-import { createHooks } from "./hooks.js";
 
 export { SidecarService } from "./service.js";
 export { createTools } from "./tools.js";

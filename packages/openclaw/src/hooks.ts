@@ -33,7 +33,9 @@ export function createHooks(
 					await client.propose(event.counterpartyPubkey, transaction);
 					log.debug(`Auto-recorded interaction with ${event.counterpartyPubkey.slice(0, 16)}...`);
 				} catch (e) {
-					log.warn(`Failed to auto-record interaction: ${e instanceof Error ? e.message : String(e)}`);
+					log.warn(
+						`Failed to auto-record interaction: ${e instanceof Error ? e.message : String(e)}`,
+					);
 				}
 			},
 		},

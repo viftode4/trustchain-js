@@ -24,10 +24,7 @@ export const MAX_DELEGATION_TTL_MS = 30 * 24 * 3600 * 1000; // 2_592_000_000
  * @param childScope   Requested scope for the sub-delegation.  Empty = unrestricted.
  * @throws {Error} if the child scope would escalate privileges.
  */
-export function validateSubDelegationScope(
-	parentScope: string[],
-	childScope: string[],
-): void {
+export function validateSubDelegationScope(parentScope: string[], childScope: string[]): void {
 	// Parent is unrestricted → child can do anything.
 	if (parentScope.length === 0) return;
 
@@ -56,9 +53,7 @@ export function validateSubDelegationScope(
  */
 export function validateDelegationTtlMs(ttlMs: number): void {
 	if (ttlMs > MAX_DELEGATION_TTL_MS) {
-		throw new Error(
-			`ttl_ms ${ttlMs} exceeds maximum of 30 days (${MAX_DELEGATION_TTL_MS} ms)`,
-		);
+		throw new Error(`ttl_ms ${ttlMs} exceeds maximum of 30 days (${MAX_DELEGATION_TTL_MS} ms)`);
 	}
 }
 

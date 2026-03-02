@@ -1,9 +1,9 @@
-import { describe, expect, it, mock, beforeEach, afterEach } from "bun:test";
+import { afterEach, beforeEach, describe, expect, it, mock } from "bun:test";
 import {
 	MAX_DELEGATION_TTL_MS,
-	validateSubDelegationScope,
 	validateDelegationTtlMs,
 	validateDelegationTtlSeconds,
+	validateSubDelegationScope,
 } from "../src/delegation.js";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -38,9 +38,7 @@ describe("validateSubDelegationScope", () => {
 	});
 
 	it("allows multi-capability child when parent is unrestricted", () => {
-		expect(() =>
-			validateSubDelegationScope([], ["read", "write", "admin"]),
-		).not.toThrow();
+		expect(() => validateSubDelegationScope([], ["read", "write", "admin"])).not.toThrow();
 	});
 
 	// ── Restricted parent — escalation via empty child scope ─────────────────
@@ -59,49 +57,43 @@ describe("validateSubDelegationScope", () => {
 	});
 
 	it("rejects empty child scope for a multi-capability parent", () => {
-		expect(() =>
-			validateSubDelegationScope(["read", "write", "delete"], []),
-		).toThrow(/unrestricted when parent scope is restricted/);
+		expect(() => validateSubDelegationScope(["read", "write", "delete"], [])).toThrow(
+			/unrestricted when parent scope is restricted/,
+		);
 	});
 
 	// ── Restricted parent — valid subsets ────────────────────────────────────
 
 	it("allows child scope that is an exact match of parent scope", () => {
-		expect(() =>
-			validateSubDelegationScope(["read", "write"], ["read", "write"]),
-		).not.toThrow();
+		expect(() => validateSubDelegationScope(["read", "write"], ["read", "write"])).not.toThrow();
 	});
 
 	it("allows child scope that is a proper subset of parent scope", () => {
-		expect(() =>
-			validateSubDelegationScope(["read", "write", "compute"], ["read"]),
-		).not.toThrow();
+		expect(() => validateSubDelegationScope(["read", "write", "compute"], ["read"])).not.toThrow();
 	});
 
 	it("allows single-capability child within multi-capability parent", () => {
-		expect(() =>
-			validateSubDelegationScope(["read", "write"], ["write"]),
-		).not.toThrow();
+		expect(() => validateSubDelegationScope(["read", "write"], ["write"])).not.toThrow();
 	});
 
 	// ── Restricted parent — superset child (capability escalation) ────────────
 
 	it("rejects child scope that introduces a capability not in parent", () => {
-		expect(() =>
-			validateSubDelegationScope(["read"], ["read", "write"]),
-		).toThrow(/scope escalation.*"write".*not in parent scope/);
+		expect(() => validateSubDelegationScope(["read"], ["read", "write"])).toThrow(
+			/scope escalation.*"write".*not in parent scope/,
+		);
 	});
 
 	it("rejects child scope that is entirely outside parent scope", () => {
-		expect(() =>
-			validateSubDelegationScope(["compute"], ["storage"]),
-		).toThrow(/scope escalation.*"storage".*not in parent scope/);
+		expect(() => validateSubDelegationScope(["compute"], ["storage"])).toThrow(
+			/scope escalation.*"storage".*not in parent scope/,
+		);
 	});
 
 	it("rejects child scope with one valid and one invalid capability", () => {
-		expect(() =>
-			validateSubDelegationScope(["read", "write"], ["read", "admin"]),
-		).toThrow(/scope escalation.*"admin".*not in parent scope/);
+		expect(() => validateSubDelegationScope(["read", "write"], ["read", "admin"])).toThrow(
+			/scope escalation.*"admin".*not in parent scope/,
+		);
 	});
 
 	it("error message includes parent scope capabilities", () => {
@@ -134,27 +126,25 @@ describe("validateDelegationTtlMs", () => {
 	});
 
 	it("accepts TTL of 29 days", () => {
-		expect(() =>
-			validateDelegationTtlMs(29 * 24 * 3600 * 1000),
-		).not.toThrow();
+		expect(() => validateDelegationTtlMs(29 * 24 * 3600 * 1000)).not.toThrow();
 	});
 
 	it("rejects TTL of 30 days + 1 ms (Bug 2)", () => {
-		expect(() =>
-			validateDelegationTtlMs(MAX_DELEGATION_TTL_MS + 1),
-		).toThrow(/exceeds maximum of 30 days/);
+		expect(() => validateDelegationTtlMs(MAX_DELEGATION_TTL_MS + 1)).toThrow(
+			/exceeds maximum of 30 days/,
+		);
 	});
 
 	it("rejects TTL of 31 days", () => {
-		expect(() =>
-			validateDelegationTtlMs(31 * 24 * 3600 * 1000),
-		).toThrow(/exceeds maximum of 30 days/);
+		expect(() => validateDelegationTtlMs(31 * 24 * 3600 * 1000)).toThrow(
+			/exceeds maximum of 30 days/,
+		);
 	});
 
 	it("rejects TTL of 1 year", () => {
-		expect(() =>
-			validateDelegationTtlMs(365 * 24 * 3600 * 1000),
-		).toThrow(/exceeds maximum of 30 days/);
+		expect(() => validateDelegationTtlMs(365 * 24 * 3600 * 1000)).toThrow(
+			/exceeds maximum of 30 days/,
+		);
 	});
 
 	it("error message includes the offending value", () => {
@@ -179,15 +169,11 @@ describe("validateDelegationTtlSeconds", () => {
 	});
 
 	it("rejects TTL of 2592001 seconds (30 days + 1 s)", () => {
-		expect(() => validateDelegationTtlSeconds(2_592_001)).toThrow(
-			/exceeds maximum of 30 days/,
-		);
+		expect(() => validateDelegationTtlSeconds(2_592_001)).toThrow(/exceeds maximum of 30 days/);
 	});
 
 	it("rejects TTL of 86400 * 31 seconds (31 days)", () => {
-		expect(() => validateDelegationTtlSeconds(86_400 * 31)).toThrow(
-			/exceeds maximum of 30 days/,
-		);
+		expect(() => validateDelegationTtlSeconds(86_400 * 31)).toThrow(/exceeds maximum of 30 days/);
 	});
 });
 

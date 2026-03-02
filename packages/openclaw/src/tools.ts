@@ -45,7 +45,7 @@ function checkTrustTool(getClient: () => TrustChainClient): ToolDefinition {
 				const bootstrapThreshold = 3;
 				const isBootstrap = result.interaction_count < bootstrapThreshold;
 				const status = isBootstrap ? "bootstrap" : "established";
-				const shortKey = result.pubkey.slice(0, 16) + "...";
+				const shortKey = `${result.pubkey.slice(0, 16)}...`;
 
 				let output = [
 					`Trust Score: ${result.trust_score.toFixed(3)}`,
@@ -101,16 +101,20 @@ function discoverPeersTool(getClient: () => TrustChainClient): ToolDefinition {
 				});
 
 				if (result.agents.length === 0) {
-					return ok(`No agents found with capability "${args.capability}". Queried ${result.queried_peers} peers.`);
+					return ok(
+						`No agents found with capability "${args.capability}". Queried ${result.queried_peers} peers.`,
+					);
 				}
 
 				const lines = result.agents.map((agent, i) => {
-					const shortKey = agent.pubkey.slice(0, 16) + "...";
+					const shortKey = `${agent.pubkey.slice(0, 16)}...`;
 					const trust = agent.trust_score?.toFixed(3) ?? "n/a";
 					return `${i + 1}. ${shortKey} — trust: ${trust}, capability: ${agent.capability}, interactions: ${agent.interaction_count}`;
 				});
 
-				lines.push(`\nQueried ${result.queried_peers} peers, found ${result.agents.length} agents.`);
+				lines.push(
+					`\nQueried ${result.queried_peers} peers, found ${result.agents.length} agents.`,
+				);
 				return ok(lines.join("\n"));
 			} catch (e) {
 				return err(`Failed to discover peers: ${e instanceof Error ? e.message : String(e)}`);
@@ -156,7 +160,7 @@ function recordInteractionTool(getClient: () => TrustChainClient): ToolDefinitio
 				const result = await client.propose(args.counterparty_pubkey as string, transaction);
 
 				const status = result.completed ? "completed (bilateral)" : "proposed (awaiting agreement)";
-				const shortHash = result.proposal.block_hash.slice(0, 12) + "...";
+				const shortHash = `${result.proposal.block_hash.slice(0, 12)}...`;
 
 				return ok(
 					[
@@ -204,24 +208,17 @@ function verifyChainTool(getClient: () => TrustChainClient): ToolDefinition {
 
 					// Sequence continuity
 					if (curr.sequence_number !== prev.sequence_number + 1) {
-						issues.push(
-							`GAP: seq ${prev.sequence_number} → ${curr.sequence_number}`,
-						);
+						issues.push(`GAP: seq ${prev.sequence_number} → ${curr.sequence_number}`);
 					}
 
 					// Hash chain
 					if (curr.previous_hash !== prev.block_hash) {
-						issues.push(
-							`HASH BREAK: block ${curr.sequence_number} previous_hash mismatch`,
-						);
+						issues.push(`HASH BREAK: block ${curr.sequence_number} previous_hash mismatch`);
 					}
 				}
 
 				const status = issues.length === 0 ? "VALID" : "INTEGRITY ISSUES";
-				const lines = [
-					`Chain Length: ${blocks.length}`,
-					`Status: ${status}`,
-				];
+				const lines = [`Chain Length: ${blocks.length}`, `Status: ${status}`];
 
 				if (issues.length > 0) {
 					lines.push(`Issues (${issues.length}):`);
@@ -262,7 +259,7 @@ function getIdentityTool(getClient: () => TrustChainClient): ToolDefinition {
 					client.delegations(pubkey),
 				]);
 
-				const shortKey = idResult.pubkey.slice(0, 16) + "...";
+				const shortKey = `${idResult.pubkey.slice(0, 16)}...`;
 				const lines = [
 					`Identity: ${shortKey}`,
 					`Resolved Key: ${idResult.resolved_pubkey.slice(0, 16)}...`,

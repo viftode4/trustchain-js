@@ -6,11 +6,11 @@
  *
  * Run: bun test tests/integration.test.ts
  */
-import { describe, expect, it, beforeAll, afterAll } from "bun:test";
+import { afterAll, beforeAll, describe, expect, it } from "bun:test";
 import { existsSync } from "node:fs";
 import { TrustChainClient } from "../src/client.js";
-import { TrustChainSidecar } from "../src/sidecar.js";
 import { HttpError } from "../src/errors.js";
+import { TrustChainSidecar } from "../src/sidecar.js";
 
 // --- Binary discovery ---
 const BINARY_CANDIDATES = [
@@ -183,7 +183,7 @@ describeIntegration("Integration: two-node bilateral interaction", () => {
 		const peers1 = await node1.peers();
 		const found = peers1.find((p) => p.pubkey === node2.pubkey);
 		expect(found).toBeDefined();
-		expect(found!.address).toContain("127.0.0.1");
+		expect(found?.address).toContain("127.0.0.1");
 	});
 
 	it("POST /propose creates a valid proposal HalfBlock", async () => {
@@ -206,8 +206,14 @@ describeIntegration("Integration: two-node bilateral interaction", () => {
 		expect(block.previous_hash).toMatch(/^[0-9a-fA-F]{64}$/);
 		expect(block.signature).toMatch(/^[0-9a-fA-F]{128}$/);
 		expect(block.block_hash).toMatch(/^[0-9a-fA-F]{64}$/);
-		expect(["proposal", "agreement", "delegation", "revocation", "checkpoint", "succession"])
-			.toContain(block.block_type);
+		expect([
+			"proposal",
+			"agreement",
+			"delegation",
+			"revocation",
+			"checkpoint",
+			"succession",
+		]).toContain(block.block_type);
 		expect(typeof block.timestamp).toBe("number");
 		expect(block.timestamp).toBeGreaterThan(1_000_000_000_000); // ms since epoch
 	});
@@ -256,8 +262,8 @@ describeIntegration("Integration: two-node bilateral interaction", () => {
 		const firstSeq = chain[0].sequence_number;
 		const block = await node1.block(node1.pubkey!, firstSeq);
 		expect(block).not.toBeNull();
-		expect(block!.sequence_number).toBe(firstSeq);
-		expect(block!.public_key).toBe(node1.pubkey);
+		expect(block?.sequence_number).toBe(firstSeq);
+		expect(block?.public_key).toBe(node1.pubkey);
 	});
 
 	it("GET /crawl returns blocks", async () => {
@@ -333,7 +339,7 @@ describeIntegration("Integration: delegation lifecycle", () => {
 		expect(resp.block.public_key).toBe(delegator.pubkey);
 		expect(resp.block.link_public_key).toBe(delegate.pubkey);
 		expect(typeof resp.delegation_id).toBe("string");
-		expect(resp.delegation_id!.length).toBeGreaterThan(0);
+		expect(resp.delegation_id?.length).toBeGreaterThan(0);
 
 		// Transaction should contain delegation metadata
 		const tx = resp.block.transaction as Record<string, unknown>;
@@ -375,18 +381,18 @@ describeIntegration("Integration: delegation lifecycle", () => {
 
 		const record = records.find((r) => r.delegation_id === activeDelegationId);
 		expect(record).toBeDefined();
-		expect(record!.revoked).toBe(false);
+		expect(record?.revoked).toBe(false);
 
 		// Verify full DelegationRecord wire format
-		expect(typeof record!.delegation_id).toBe("string");
-		expect(typeof record!.delegator_pubkey).toBe("string");
-		expect(typeof record!.delegate_pubkey).toBe("string");
-		expect(Array.isArray(record!.scope)).toBe(true);
-		expect(typeof record!.max_depth).toBe("number");
-		expect(typeof record!.issued_at).toBe("number");
-		expect(typeof record!.expires_at).toBe("number");
-		expect(typeof record!.delegation_block_hash).toBe("string");
-		expect(typeof record!.revoked).toBe("boolean");
+		expect(typeof record?.delegation_id).toBe("string");
+		expect(typeof record?.delegator_pubkey).toBe("string");
+		expect(typeof record?.delegate_pubkey).toBe("string");
+		expect(Array.isArray(record?.scope)).toBe(true);
+		expect(typeof record?.max_depth).toBe("number");
+		expect(typeof record?.issued_at).toBe("number");
+		expect(typeof record?.expires_at).toBe("number");
+		expect(typeof record?.delegation_block_hash).toBe("string");
+		expect(typeof record?.revoked).toBe("boolean");
 	});
 
 	it("GET /delegation/{id} returns single delegation record from delegate's node", async () => {

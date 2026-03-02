@@ -1,6 +1,6 @@
-import { describe, expect, it, mock, beforeEach, afterEach } from "bun:test";
+import { afterEach, beforeEach, describe, expect, it, mock } from "bun:test";
 import { TrustChainClient } from "../src/client.js";
-import { HttpError, ConnectionError, TimeoutError } from "../src/errors.js";
+import { ConnectionError, HttpError, TimeoutError } from "../src/errors.js";
 import type { HalfBlock } from "../src/types.js";
 
 const BASE_URL = "http://127.0.0.1:18202";
@@ -184,9 +184,7 @@ describe("TrustChainClient", () => {
 					),
 				);
 			}
-			return Promise.resolve(
-				new Response(JSON.stringify({ blocks: [makeBlock()] })),
-			);
+			return Promise.resolve(new Response(JSON.stringify({ blocks: [makeBlock()] })));
 		});
 
 		const resp = await client.chain();
@@ -208,7 +206,7 @@ describe("TrustChainClient", () => {
 		mockJsonResponse({ block: makeBlock() });
 		const resp = await client.block("a".repeat(64), 1);
 		expect(resp).not.toBeNull();
-		expect(resp!.sequence_number).toBe(1);
+		expect(resp?.sequence_number).toBe(1);
 
 		const { url, method } = extractCall(mockFetch);
 		expect(url).toBe(`${BASE_URL}/block/${"a".repeat(64)}/1`);
@@ -475,9 +473,7 @@ describe("TrustChainClient", () => {
 
 	it("throws HttpError on 404", async () => {
 		mockFetch.mockImplementation(() =>
-			Promise.resolve(
-				new Response(JSON.stringify({ error: "not found" }), { status: 404 }),
-			),
+			Promise.resolve(new Response(JSON.stringify({ error: "not found" }), { status: 404 })),
 		);
 		await expect(client.status()).rejects.toBeInstanceOf(HttpError);
 
@@ -491,17 +487,13 @@ describe("TrustChainClient", () => {
 
 	it("throws HttpError on 500", async () => {
 		mockFetch.mockImplementation(() =>
-			Promise.resolve(
-				new Response("internal server error", { status: 500 }),
-			),
+			Promise.resolve(new Response("internal server error", { status: 500 })),
 		);
 		await expect(client.healthz()).rejects.toBeInstanceOf(HttpError);
 	});
 
 	it("throws ConnectionError on network failure", async () => {
-		mockFetch.mockImplementation(() =>
-			Promise.reject(new TypeError("fetch failed")),
-		);
+		mockFetch.mockImplementation(() => Promise.reject(new TypeError("fetch failed")));
 		await expect(client.status()).rejects.toBeInstanceOf(ConnectionError);
 	});
 

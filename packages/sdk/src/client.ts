@@ -48,10 +48,7 @@ export class TrustChainClient {
 
 	// --- Block operations ---
 
-	async propose(
-		counterpartyPubkey: string,
-		transaction?: unknown,
-	): Promise<ProposeResponse> {
+	async propose(counterpartyPubkey: string, transaction?: unknown): Promise<ProposeResponse> {
 		return this.post("/propose", {
 			counterparty_pubkey: counterpartyPubkey,
 			transaction: transaction ?? {},
@@ -89,10 +86,7 @@ export class TrustChainClient {
 		return this.get("/peers");
 	}
 
-	async registerPeer(
-		pubkey: string,
-		address: string,
-	): Promise<{ status: string }> {
+	async registerPeer(pubkey: string, address: string): Promise<{ status: string }> {
 		return this.post("/peers", { pubkey, address });
 	}
 
@@ -102,10 +96,7 @@ export class TrustChainClient {
 		return this.get(`/trust/${pubkey}`);
 	}
 
-	async discover(
-		capability: string,
-		options?: DiscoverOptions,
-	): Promise<DiscoverResponse> {
+	async discover(capability: string, options?: DiscoverOptions): Promise<DiscoverResponse> {
 		const params = new URLSearchParams({ capability });
 		if (options?.min_trust !== undefined) params.set("min_trust", String(options.min_trust));
 		if (options?.max_results !== undefined) params.set("max_results", String(options.max_results));

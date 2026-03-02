@@ -1,14 +1,14 @@
 import { describe, expect, it, mock } from "bun:test";
-import { createTools } from "../src/tools.js";
 import type { TrustChainClient } from "@trustchain/sdk";
 import type {
-	TrustScoreResponse,
+	DelegationRecord,
 	DiscoverResponse,
-	ProposeResponse,
 	HalfBlock,
 	IdentityResponse,
-	DelegationRecord,
+	ProposeResponse,
+	TrustScoreResponse,
 } from "@trustchain/sdk";
+import { createTools } from "../src/tools.js";
 
 function makeBlock(overrides?: Partial<HalfBlock>): HalfBlock {
 	return {
@@ -67,7 +67,7 @@ function createMockClient(overrides?: Partial<TrustChainClient>): TrustChainClie
 		delegations: mock(() =>
 			Promise.resolve([
 				{
-					delegation_id: "del-" + "1".repeat(60),
+					delegation_id: `del-${"1".repeat(60)}`,
 					delegator_pubkey: "a".repeat(64),
 					delegate_pubkey: "b".repeat(64),
 					scope: ["read"],
@@ -168,9 +168,7 @@ describe("TrustChain OpenClaw tools", () => {
 
 		it("reports no agents found", async () => {
 			const client = createMockClient({
-				discover: mock(() =>
-					Promise.resolve({ agents: [], queried_peers: 5 }),
-				),
+				discover: mock(() => Promise.resolve({ agents: [], queried_peers: 5 })),
 			} as unknown as Partial<TrustChainClient>);
 			const tools = createTools(() => client);
 			const tool = tools.find((t) => t.name === "trustchain_discover_peers")!;
