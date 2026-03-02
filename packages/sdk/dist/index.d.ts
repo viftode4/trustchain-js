@@ -3,8 +3,13 @@ export { TrustChainSidecar } from "./sidecar.js";
 export * from "./types.js";
 export * from "./errors.js";
 export { findBinary, ensureBinary, findFreePortBase } from "./utils.js";
-export { MAX_DELEGATION_TTL_MS, validateSubDelegationScope, validateDelegationTtlMs, validateDelegationTtlSeconds, } from "./delegation.js";
-import { TrustChainSidecar } from "./sidecar.js";
+export {
+	MAX_DELEGATION_TTL_MS,
+	validateSubDelegationScope,
+	validateDelegationTtlMs,
+	validateDelegationTtlSeconds,
+} from "./delegation.js";
+import type { TrustChainSidecar } from "./sidecar.js";
 import type { SidecarOptions } from "./types.js";
 /**
  * Initialize a TrustChain sidecar (singleton).
@@ -20,9 +25,9 @@ export declare const protect: typeof init;
  * Enforces the 30-day maximum TTL cap before making any network call.
  */
 export declare function initDelegate(options: {
-    parentUrl: string;
-    scope: string[];
-    ttlSeconds?: number;
-    sidecar?: SidecarOptions;
+	parentUrl: string;
+	scope: string[];
+	ttlSeconds?: number;
+	sidecar?: SidecarOptions;
 }): Promise<TrustChainSidecar>;
 //# sourceMappingURL=index.d.ts.map

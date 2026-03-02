@@ -23,19 +23,22 @@ export const MAX_DELEGATION_TTL_MS = 30 * 24 * 3600 * 1000; // 2_592_000_000
  * @throws {Error} if the child scope would escalate privileges.
  */
 export function validateSubDelegationScope(parentScope, childScope) {
-    // Parent is unrestricted → child can do anything.
-    if (parentScope.length === 0)
-        return;
-    // Parent is restricted → child must not be unrestricted.
-    if (childScope.length === 0) {
-        throw new Error("Sub-delegation scope must not be unrestricted when parent scope is restricted");
-    }
-    // Every capability requested by the child must be covered by the parent.
-    for (const cap of childScope) {
-        if (!parentScope.includes(cap)) {
-            throw new Error(`Sub-delegation scope escalation: capability "${cap}" is not in parent scope [${parentScope.join(", ")}]`);
-        }
-    }
+	// Parent is unrestricted → child can do anything.
+	if (parentScope.length === 0) return;
+	// Parent is restricted → child must not be unrestricted.
+	if (childScope.length === 0) {
+		throw new Error(
+			"Sub-delegation scope must not be unrestricted when parent scope is restricted",
+		);
+	}
+	// Every capability requested by the child must be covered by the parent.
+	for (const cap of childScope) {
+		if (!parentScope.includes(cap)) {
+			throw new Error(
+				`Sub-delegation scope escalation: capability "${cap}" is not in parent scope [${parentScope.join(", ")}]`,
+			);
+		}
+	}
 }
 /**
  * Validate that a TTL in milliseconds does not exceed the 30-day maximum.
@@ -44,9 +47,9 @@ export function validateSubDelegationScope(parentScope, childScope) {
  * @throws {Error} if ttlMs exceeds MAX_DELEGATION_TTL_MS.
  */
 export function validateDelegationTtlMs(ttlMs) {
-    if (ttlMs > MAX_DELEGATION_TTL_MS) {
-        throw new Error(`ttl_ms ${ttlMs} exceeds maximum of 30 days (${MAX_DELEGATION_TTL_MS} ms)`);
-    }
+	if (ttlMs > MAX_DELEGATION_TTL_MS) {
+		throw new Error(`ttl_ms ${ttlMs} exceeds maximum of 30 days (${MAX_DELEGATION_TTL_MS} ms)`);
+	}
 }
 /**
  * Validate that a TTL in seconds does not exceed the 30-day maximum.
@@ -55,6 +58,6 @@ export function validateDelegationTtlMs(ttlMs) {
  * @throws {Error} if the equivalent milliseconds exceed MAX_DELEGATION_TTL_MS.
  */
 export function validateDelegationTtlSeconds(ttlSeconds) {
-    validateDelegationTtlMs(ttlSeconds * 1000);
+	validateDelegationTtlMs(ttlSeconds * 1000);
 }
 //# sourceMappingURL=delegation.js.map

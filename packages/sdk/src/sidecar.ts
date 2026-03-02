@@ -1,12 +1,6 @@
 import { type ChildProcess, spawn } from "node:child_process";
-import { SidecarError } from "./errors.js";
 import { TrustChainClient } from "./client.js";
-import {
-	PORT_HTTP_OFFSET,
-	PORT_PROXY_OFFSET,
-	ensureBinary,
-	findFreePortBase,
-} from "./utils.js";
+import { SidecarError } from "./errors.js";
 import type {
 	AcceptDelegationResponse,
 	AcceptSuccessionResponse,
@@ -25,6 +19,7 @@ import type {
 	StatusResponse,
 	TrustScoreResponse,
 } from "./types.js";
+import { PORT_HTTP_OFFSET, PORT_PROXY_OFFSET, ensureBinary, findFreePortBase } from "./utils.js";
 
 const PUBKEY_REGEX = /Public key:\s*([0-9a-fA-F]{64})/;
 const READY_TIMEOUT_MS = 10_000;
@@ -37,10 +32,7 @@ export class TrustChainSidecar {
 	private _portBase: number | null = null;
 	private _running = false;
 	private _client: TrustChainClient | null = null;
-	private readonly options: Required<
-		Pick<SidecarOptions, "name" | "logLevel">
-	> &
-		SidecarOptions;
+	private readonly options: Required<Pick<SidecarOptions, "name" | "logLevel">> & SidecarOptions;
 	private savedHttpProxy: string | undefined;
 	private savedHttpProxyLower: string | undefined;
 
@@ -102,8 +94,8 @@ export class TrustChainSidecar {
 
 		// Strip proxy env to prevent loops
 		const env = { ...process.env };
-		delete env.HTTP_PROXY;
-		delete env.http_proxy;
+		env.HTTP_PROXY = undefined;
+		env.http_proxy = undefined;
 
 		const spawnOptions: Parameters<typeof spawn>[2] = {
 			env,
@@ -167,12 +159,12 @@ export class TrustChainSidecar {
 		if (this.savedHttpProxy !== undefined) {
 			process.env.HTTP_PROXY = this.savedHttpProxy;
 		} else {
-			delete process.env.HTTP_PROXY;
+			process.env.HTTP_PROXY = undefined;
 		}
 		if (this.savedHttpProxyLower !== undefined) {
 			process.env.http_proxy = this.savedHttpProxyLower;
 		} else {
-			delete process.env.http_proxy;
+			process.env.http_proxy = undefined;
 		}
 	}
 

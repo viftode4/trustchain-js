@@ -11,8 +11,8 @@ export {
 } from "./delegation.js";
 
 import { TrustChainClient } from "./client.js";
-import { TrustChainSidecar } from "./sidecar.js";
 import { validateDelegationTtlSeconds } from "./delegation.js";
+import { TrustChainSidecar } from "./sidecar.js";
 import type { SidecarOptions } from "./types.js";
 
 let singleton: TrustChainSidecar | null = null;

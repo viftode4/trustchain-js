@@ -127,7 +127,7 @@ function extractFromTar(buf: Buffer, filename: string): Buffer {
 
 		const name = header.subarray(0, 100).toString("utf8").replace(/\0/g, "");
 		const sizeStr = header.subarray(124, 136).toString("utf8").replace(/\0/g, "").trim();
-		const size = parseInt(sizeStr, 8);
+		const size = Number.parseInt(sizeStr, 8);
 
 		offset += 512; // Move past header
 
@@ -205,8 +205,7 @@ export function findBinary(explicitPath?: string): string {
 	if (existsSync(homeBinary)) return homeBinary;
 
 	throw new BinaryNotFoundError(
-		`${BINARY_NAME} not found in PATH or ~/.trustchain/bin/. ` +
-			"Download from https://github.com/viftode4/trustchain/releases",
+		`${BINARY_NAME} not found in PATH or ~/.trustchain/bin/. Download from https://github.com/viftode4/trustchain/releases`,
 	);
 }
 

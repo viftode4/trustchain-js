@@ -22,7 +22,10 @@ export declare const MAX_DELEGATION_TTL_MS: number;
  * @param childScope   Requested scope for the sub-delegation.  Empty = unrestricted.
  * @throws {Error} if the child scope would escalate privileges.
  */
-export declare function validateSubDelegationScope(parentScope: string[], childScope: string[]): void;
+export declare function validateSubDelegationScope(
+	parentScope: string[],
+	childScope: string[],
+): void;
 /**
  * Validate that a TTL in milliseconds does not exceed the 30-day maximum.
  *
