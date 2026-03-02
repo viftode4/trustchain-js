@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "paths": {
+      "@trustchain/sdk": ["../sdk/src/index.ts"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["tests", "dist"],
+  "references": [{ "path": "../sdk" }]
+}

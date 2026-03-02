@@ -1,0 +1,48 @@
+{
+  "name": "@trustchain/openclaw",
+  "displayName": "TrustChain",
+  "description": "Decentralized trust layer for autonomous AI agents — bilateral signed interaction records with Sybil-resistant trust scores",
+  "version": "1.0.0",
+  "entryPoint": "dist/index.js",
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "sidecarBinary": {
+        "type": "string",
+        "description": "Path to the trustchain-node binary. Auto-discovered if not set."
+      },
+      "portBase": {
+        "type": "number",
+        "description": "Base port for the sidecar (4 consecutive ports used). Auto-allocated if not set."
+      },
+      "bootstrap": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Bootstrap peer addresses (host:port) for initial network connectivity.",
+        "default": []
+      },
+      "logLevel": {
+        "type": "string",
+        "enum": ["error", "warn", "info", "debug", "trace"],
+        "default": "info"
+      },
+      "autoStart": {
+        "type": "boolean",
+        "description": "Start the TrustChain sidecar automatically when the plugin loads.",
+        "default": true
+      },
+      "autoRecord": {
+        "type": "boolean",
+        "description": "Automatically record interactions on command completion.",
+        "default": false
+      }
+    }
+  },
+  "tools": [
+    "trustchain_check_trust",
+    "trustchain_discover_peers",
+    "trustchain_record_interaction",
+    "trustchain_verify_chain",
+    "trustchain_get_identity"
+  ]
+}
