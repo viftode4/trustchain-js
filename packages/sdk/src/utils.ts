@@ -5,7 +5,7 @@ import { arch, homedir, platform } from "node:os";
 import { join } from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
-import { createGunzip } from "node:zlib";
+import { createGunzip, inflateRawSync } from "node:zlib";
 import { BinaryNotFoundError } from "./errors.js";
 
 const BINARY_NAME = process.platform === "win32" ? "trustchain-node.exe" : "trustchain-node";
@@ -57,6 +57,7 @@ export async function ensureBinary(explicitPath?: string): Promise<string> {
 			Accept: "application/vnd.github+json",
 			"User-Agent": "trustchain-js",
 		},
+		signal: AbortSignal.timeout(60_000),
 	});
 	if (!releaseResp.ok) {
 		throw new BinaryNotFoundError(`Failed to fetch release info: ${releaseResp.statusText}`);
@@ -78,6 +79,7 @@ export async function ensureBinary(explicitPath?: string): Promise<string> {
 	// Download the archive
 	const dlResp = await fetch(asset.browser_download_url, {
 		headers: { "User-Agent": "trustchain-js" },
+		signal: AbortSignal.timeout(60_000),
 	});
 	if (!dlResp.ok || !dlResp.body) {
 		throw new BinaryNotFoundError(`Failed to download: ${dlResp.statusText}`);
@@ -88,8 +90,7 @@ export async function ensureBinary(explicitPath?: string): Promise<string> {
 
 	// Extract based on file type
 	if (artifact.endsWith(".tar.gz")) {
-		// Use tar module (Node built-in as of v22, but we extract manually)
-		// Simple approach: decompress with zlib, then parse tar
+		// decompress with zlib, then parse tar headers manually
 		const decompressed = await decompressGzip(buffer);
 		const binaryData = extractFromTar(decompressed, "trustchain-node");
 		await writeFile(dest, binaryData);
@@ -176,8 +177,13 @@ function extractFromZip(buf: Buffer, filename: string): Buffer {
 				// Stored (no compression)
 				return buf.subarray(dataOffset, dataOffset + uncompSize);
 			}
+			if (compMethod === 8) {
+				// Deflate
+				const compressed = buf.subarray(dataOffset, dataOffset + compSize);
+				return inflateRawSync(compressed);
+			}
 			throw new BinaryNotFoundError(
-				`ZIP entry '${name}' uses compression method ${compMethod} (only stored supported)`,
+				`ZIP entry '${name}' uses unsupported compression method ${compMethod}`,
 			);
 		}
 
@@ -194,6 +200,13 @@ export function findBinary(explicitPath?: string): string {
 	if (explicitPath) {
 		if (existsSync(explicitPath)) return explicitPath;
 		throw new BinaryNotFoundError(`Binary not found at: ${explicitPath}`);
+	}
+
+	// Check TRUSTCHAIN_BINARY env var
+	const envPath = process.env.TRUSTCHAIN_BINARY;
+	if (envPath) {
+		if (existsSync(envPath)) return envPath;
+		throw new BinaryNotFoundError(`Binary not found at TRUSTCHAIN_BINARY: ${envPath}`);
 	}
 
 	// Check PATH via which-like lookup

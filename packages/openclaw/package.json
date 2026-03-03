@@ -11,13 +11,13 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist", "openclaw.plugin.json", "SKILL.md"],
+  "files": ["dist", "openclaw.plugin.json", "SKILL.md", "README.md"],
   "scripts": {
     "build": "tsc",
     "test": "bun test"
   },
   "dependencies": {
-    "@trustchain/sdk": "workspace:*"
+    "@trustchain/sdk": "^1.0.0"
   },
   "engines": {
     "node": ">=20.0.0"
