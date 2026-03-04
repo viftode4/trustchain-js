@@ -17,8 +17,9 @@ Zero runtime dependencies. The `trustchain-node` binary downloads automatically 
 ## Quick Start
 
 ```bash
-# Install from git (not yet published to npm)
-bun add github:viftode4/trustchain-js
+bun add @trustchain/sdk
+# or
+npm install @trustchain/sdk
 ```
 
 ```typescript
