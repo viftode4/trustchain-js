@@ -23,6 +23,10 @@ import { PORT_HTTP_OFFSET, PORT_PROXY_OFFSET, ensureBinary, findFreePortBase } f
 
 const PUBKEY_REGEX = /Public key:\s*([0-9a-fA-F]{64})/;
 const READY_TIMEOUT_MS = 10_000;
+
+// Early-access public seed node. Not production-scale yet — will be
+// replaced with a domain and additional nodes as the network grows.
+const DEFAULT_SEED_NODES = ["http://5.161.255.238:8202"];
 const POLL_INITIAL_MS = 100;
 const POLL_MAX_MS = 1000;
 
@@ -85,9 +89,8 @@ export class TrustChainSidecar {
 			this.options.logLevel,
 		];
 
-		if (this.options.bootstrap?.length) {
-			args.push("--bootstrap", this.options.bootstrap.join(","));
-		}
+		const bootstrap = this.options.bootstrap?.length ? this.options.bootstrap : DEFAULT_SEED_NODES;
+		args.push("--bootstrap", bootstrap.join(","));
 		if (this.options.dataDir) {
 			args.push("--data-dir", this.options.dataDir);
 		}
