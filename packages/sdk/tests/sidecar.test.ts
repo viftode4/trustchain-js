@@ -15,13 +15,21 @@ describe("findBinary", () => {
 	});
 
 	it("throws BinaryNotFoundError when not in PATH or home dir", () => {
-		// Save and clear PATH to ensure binary is not found
+		// Save and clear PATH, and temporarily override HOME to ensure binary is not found
 		const origPath = process.env.PATH;
+		const origHome = process.env.HOME;
+		const origUserProfile = process.env.USERPROFILE;
 		process.env.PATH = "";
+		process.env.HOME = "/nonexistent";
+		process.env.USERPROFILE = "/nonexistent";
 		try {
 			expect(() => findBinary()).toThrow(BinaryNotFoundError);
 		} finally {
 			process.env.PATH = origPath;
+			if (origHome !== undefined) process.env.HOME = origHome;
+			else process.env.HOME = undefined as unknown as string;
+			if (origUserProfile !== undefined) process.env.USERPROFILE = origUserProfile;
+			else process.env.USERPROFILE = undefined as unknown as string;
 		}
 	});
 });

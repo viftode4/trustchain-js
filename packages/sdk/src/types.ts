@@ -118,6 +118,13 @@ export interface PeerInfo {
 export interface TrustScoreResponse {
 	pubkey: string;
 	trust_score: number;
+	connectivity?: number;
+	integrity?: number;
+	diversity?: number;
+	unique_peers?: number;
+	interactions?: number;
+	fraud?: boolean;
+	path_diversity?: number;
 	interaction_count: number;
 	block_count: number;
 }
@@ -128,6 +135,8 @@ export interface DiscoveredAgent {
 	capability: string;
 	interaction_count: number;
 	trust_score?: number;
+	connectivity?: number;
+	diversity?: number;
 }
 
 export interface DiscoverResponse {
