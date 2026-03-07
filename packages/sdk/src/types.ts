@@ -12,7 +12,8 @@ export type BlockType =
 	| "checkpoint"
 	| "delegation"
 	| "revocation"
-	| "succession";
+	| "succession"
+	| "audit";
 
 export interface HalfBlock {
 	public_key: string;
@@ -67,6 +68,15 @@ export interface AcceptDelegationRequest {
 
 export interface AcceptSuccessionRequest {
 	proposal_block: HalfBlock;
+}
+
+export interface AuditRequest {
+	transaction: unknown;
+}
+
+export interface AuditResponse {
+	block: HalfBlock;
+	sequence_number: number;
 }
 
 // --- Responses ---
@@ -128,6 +138,7 @@ export interface TrustScoreResponse {
 	path_diversity?: number;
 	interaction_count: number;
 	block_count: number;
+	audit_count?: number;
 }
 
 export interface DiscoveredAgent {

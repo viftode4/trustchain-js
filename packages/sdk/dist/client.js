@@ -18,6 +18,9 @@ export class TrustChainClient {
         return this.getText("/metrics");
     }
     // --- Block operations ---
+    async audit(transaction) {
+        return this.post("/audit", { transaction: transaction ?? {} });
+    }
     async propose(counterpartyPubkey, transaction) {
         return this.post("/propose", {
             counterparty_pubkey: counterpartyPubkey,

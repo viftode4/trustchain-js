@@ -4,6 +4,7 @@ import type {
 	AcceptDelegationResponse,
 	AcceptSuccessionRequest,
 	AcceptSuccessionResponse,
+	AuditResponse,
 	ClientOptions,
 	DelegateRequest,
 	DelegationRecord,
@@ -47,6 +48,10 @@ export class TrustChainClient {
 	}
 
 	// --- Block operations ---
+
+	async audit(transaction: unknown): Promise<AuditResponse> {
+		return this.post("/audit", { transaction: transaction ?? {} });
+	}
 
 	async propose(counterpartyPubkey: string, transaction?: unknown): Promise<ProposeResponse> {
 		return this.post("/propose", {

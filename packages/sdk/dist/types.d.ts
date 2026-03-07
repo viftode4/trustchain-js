@@ -3,7 +3,7 @@
  * All timestamps are number (int milliseconds since epoch).
  * Property names use snake_case to match JSON wire format.
  */
-export type BlockType = "proposal" | "agreement" | "checkpoint" | "delegation" | "revocation" | "succession";
+export type BlockType = "proposal" | "agreement" | "checkpoint" | "delegation" | "revocation" | "succession" | "audit";
 export interface HalfBlock {
     public_key: string;
     sequence_number: number;
@@ -47,6 +47,13 @@ export interface AcceptDelegationRequest {
 }
 export interface AcceptSuccessionRequest {
     proposal_block: HalfBlock;
+}
+export interface AuditRequest {
+    transaction: unknown;
+}
+export interface AuditResponse {
+    block: HalfBlock;
+    sequence_number: number;
 }
 export interface StatusResponse {
     public_key: string;
@@ -97,6 +104,7 @@ export interface TrustScoreResponse {
     path_diversity?: number;
     interaction_count: number;
     block_count: number;
+    audit_count?: number;
 }
 export interface DiscoveredAgent {
     pubkey: string;
