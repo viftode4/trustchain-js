@@ -121,6 +121,7 @@ export interface TrustScoreResponse {
 	connectivity?: number;
 	integrity?: number;
 	diversity?: number;
+	recency?: number;
 	unique_peers?: number;
 	interactions?: number;
 	fraud?: boolean;

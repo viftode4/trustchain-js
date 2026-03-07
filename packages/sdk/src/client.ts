@@ -92,8 +92,9 @@ export class TrustChainClient {
 
 	// --- Trust ---
 
-	async trustScore(pubkey: string): Promise<TrustScoreResponse> {
-		return this.get(`/trust/${pubkey}`);
+	async trustScore(pubkey: string, context?: string): Promise<TrustScoreResponse> {
+		const params = context ? `?context=${encodeURIComponent(context)}` : "";
+		return this.get(`/trust/${pubkey}${params}`);
 	}
 
 	async discover(capability: string, options?: DiscoverOptions): Promise<DiscoverResponse> {
