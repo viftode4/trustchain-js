@@ -66,11 +66,15 @@ Every call to a known TrustChain peer triggers a bilateral trust handshake: both
 
 The sidecar proxy runs locally on port 8203. Agents set `HTTP_PROXY=http://127.0.0.1:8203` and all inter-agent HTTP calls are automatically instrumented. No code changes to agent logic required.
 
-Trust is a number between 0.0 and 1.0, combining:
-- **Chain integrity** (50%) — hash-linked, Ed25519-signed interaction history
-- **NetFlow** (50%) — max-flow from seed nodes; Sybil attacks fail here
+Trust is a number between 0.0 and 1.0, computed as **connectivity × integrity × diversity × recency** (v3 model):
+- **Connectivity** — MeritRank random walks (default) or NetFlow max-flow from seed nodes; Sybil attacks fail here
+- **Integrity** — hash-linked, Ed25519-signed interaction history
+- **Diversity** — distinct interaction partners
+- **Recency** — exponential decay weighting recent interactions
 
 Proven fraud results in a permanent hard-zero trust score.
+
+When no TrustChain-aware peer exists, the SDK supports **single-player audit mode** — self-signed audit blocks as a cryptographic log.
 
 ## Binary Auto-Download
 

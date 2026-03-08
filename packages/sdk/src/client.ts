@@ -4,6 +4,8 @@ import type {
 	AcceptDelegationResponse,
 	AcceptSuccessionRequest,
 	AcceptSuccessionResponse,
+	AuditBatchResponse,
+	AuditReportResponse,
 	AuditResponse,
 	ClientOptions,
 	DelegateRequest,
@@ -11,6 +13,7 @@ import type {
 	DelegationResponse,
 	DiscoverOptions,
 	DiscoverResponse,
+	ExportChainResponse,
 	HalfBlock,
 	HealthResponse,
 	IdentityResponse,
@@ -51,6 +54,18 @@ export class TrustChainClient {
 
 	async audit(transaction: unknown): Promise<AuditResponse> {
 		return this.post("/audit", { transaction: transaction ?? {} });
+	}
+
+	async auditBatch(entries: unknown[]): Promise<AuditBatchResponse> {
+		return this.post("/audit-batch", { entries });
+	}
+
+	async auditReport(): Promise<AuditReportResponse> {
+		return this.get("/audit-report");
+	}
+
+	async exportChain(): Promise<ExportChainResponse> {
+		return this.get("/export-chain");
 	}
 
 	async propose(counterpartyPubkey: string, transaction?: unknown): Promise<ProposeResponse> {

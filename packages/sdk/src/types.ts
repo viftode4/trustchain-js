@@ -79,6 +79,46 @@ export interface AuditResponse {
 	sequence_number: number;
 }
 
+export type AuditLevel = "minimal" | "standard" | "comprehensive";
+
+export type EventType =
+	| "tool_call"
+	| "llm_decision"
+	| "error"
+	| "state_change"
+	| "human_override"
+	| "external_api"
+	| "raw_http";
+
+export interface AuditBatchRequest {
+	entries: unknown[];
+}
+
+export interface AuditBatchResponse {
+	blocks: HalfBlock[];
+	count: number;
+}
+
+export interface AuditReportResponse {
+	total_blocks: number;
+	audit_blocks: number;
+	bilateral_blocks: number;
+	integrity_valid: boolean;
+	integrity_score: number;
+	event_type_breakdown: Record<string, number>;
+	first_timestamp?: number;
+	last_timestamp?: number;
+	chain_length: number;
+}
+
+export interface ExportChainResponse {
+	pubkey: string;
+	chain: HalfBlock[];
+	exported_at: number;
+	chain_hash: string;
+	signature: string;
+}
+
 // --- Responses ---
 
 export interface StatusResponse {

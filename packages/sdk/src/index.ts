@@ -9,6 +9,15 @@ export {
 	validateDelegationTtlMs,
 	validateDelegationTtlSeconds,
 } from "./delegation.js";
+export {
+	AuditConfig,
+	defaultEvents,
+	validateBaseSchema,
+	validateAiActSchema,
+	validateAiuc1Schema,
+	validateTransaction,
+} from "./audit.js";
+export type { SchemaId } from "./audit.js";
 
 import { TrustChainClient } from "./client.js";
 import { validateDelegationTtlSeconds } from "./delegation.js";

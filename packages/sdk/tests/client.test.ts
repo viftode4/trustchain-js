@@ -238,6 +238,81 @@ describe("TrustChainClient", () => {
 		expect(url).toBe(`${BASE_URL}/crawl/${"a".repeat(64)}?start_seq=5`);
 	});
 
+	// --- Audit batch & report ---
+
+	it("auditBatch() sends POST /audit-batch with entries array", async () => {
+		const blocks = [
+			makeBlock({ block_type: "audit" }),
+			makeBlock({ block_type: "audit", sequence_number: 2 }),
+		];
+		mockJsonResponse({ blocks, count: 2 });
+		const entries = [
+			{ event_type: "tool_call", timestamp: 1700000000000 },
+			{ event_type: "error", timestamp: 1700000001000 },
+		];
+		const resp = await client.auditBatch(entries);
+		expect(resp.count).toBe(2);
+		expect(resp.blocks).toHaveLength(2);
+
+		const { url, method, body } = extractCall(mockFetch);
+		expect(url).toBe(`${BASE_URL}/audit-batch`);
+		expect(method).toBe("POST");
+		expect(body).toEqual({ entries });
+	});
+
+	it("auditBatch() sends empty entries array", async () => {
+		mockJsonResponse({ blocks: [], count: 0 });
+		const resp = await client.auditBatch([]);
+		expect(resp.count).toBe(0);
+		expect(resp.blocks).toEqual([]);
+
+		const { body } = extractCall(mockFetch);
+		expect(body).toEqual({ entries: [] });
+	});
+
+	it("auditReport() sends GET /audit-report", async () => {
+		const data = {
+			total_blocks: 42,
+			audit_blocks: 30,
+			bilateral_blocks: 12,
+			integrity_valid: true,
+			integrity_score: 1.0,
+			event_type_breakdown: { tool_call: 20, error: 10 },
+			first_timestamp: 1700000000000,
+			last_timestamp: 1700000099000,
+			chain_length: 42,
+		};
+		mockJsonResponse(data);
+		const resp = await client.auditReport();
+		expect(resp.total_blocks).toBe(42);
+		expect(resp.integrity_valid).toBe(true);
+		expect(resp.event_type_breakdown.tool_call).toBe(20);
+
+		const { url, method } = extractCall(mockFetch);
+		expect(url).toBe(`${BASE_URL}/audit-report`);
+		expect(method).toBe("GET");
+	});
+
+	it("exportChain() sends GET /export-chain", async () => {
+		const data = {
+			pubkey: "a".repeat(64),
+			chain: [makeBlock({ block_type: "audit" })],
+			exported_at: 1700000000000,
+			chain_hash: "f".repeat(64),
+			signature: "s".repeat(128),
+		};
+		mockJsonResponse(data);
+		const resp = await client.exportChain();
+		expect(resp.pubkey).toBe("a".repeat(64));
+		expect(resp.chain).toHaveLength(1);
+		expect(resp.chain_hash).toBe("f".repeat(64));
+		expect(resp.signature).toBe("s".repeat(128));
+
+		const { url, method } = extractCall(mockFetch);
+		expect(url).toBe(`${BASE_URL}/export-chain`);
+		expect(method).toBe("GET");
+	});
+
 	// --- Peer management ---
 
 	it("peers() sends GET /peers", async () => {
