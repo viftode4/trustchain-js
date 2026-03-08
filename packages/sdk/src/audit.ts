@@ -40,11 +40,14 @@ export function defaultEvents(level: AuditLevel): EventType[] {
 export function validateTransaction(schema: SchemaId, transaction: Record<string, unknown>): void {
 	switch (schema) {
 		case "base":
-			return validateBaseSchema(transaction);
+			validateBaseSchema(transaction);
+			break;
 		case "ai_act":
-			return validateAiActSchema(transaction);
+			validateAiActSchema(transaction);
+			break;
 		case "aiuc1":
-			return validateAiuc1Schema(transaction);
+			validateAiuc1Schema(transaction);
+			break;
 		default:
 			throw new Error(`Unknown schema: ${schema as string}`);
 	}
