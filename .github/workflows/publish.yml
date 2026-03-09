@@ -42,12 +42,14 @@ jobs:
       - run: bun run build
 
       - name: Publish @trustchain/sdk
+        continue-on-error: true
         working-directory: packages/sdk
         run: npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish @trustchain/openclaw
+        continue-on-error: true
         working-directory: packages/openclaw
         run: npm publish --access public --provenance
         env:
