@@ -31,7 +31,7 @@ export default function (api) {
                     content: [{ type: "text", text: result.content }],
                 };
             },
-        }, { optional: false });
+        }, { optional: true });
     }
     // Auto-start sidecar if configured
     if (autoStart) {

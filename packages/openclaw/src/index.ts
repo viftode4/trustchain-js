@@ -38,7 +38,7 @@ export default function (api: PluginAPI) {
 					};
 				},
 			},
-			{ optional: false },
+			{ optional: true },
 		);
 	}
 
