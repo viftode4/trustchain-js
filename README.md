@@ -1,7 +1,7 @@
 # TrustChain TypeScript SDK
 
 [![CI](https://github.com/viftode4/trustchain-js/actions/workflows/ci.yml/badge.svg)](https://github.com/viftode4/trustchain-js/actions)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
 **TypeScript SDK for [TrustChain](https://github.com/viftode4/trustchain) — decentralized trust for AI agents.**
 
@@ -116,4 +116,4 @@ Implements [draft-pouwelse-trustchain-01](https://datatracker.ietf.org/doc/draft
 
 ## License
 
-MIT
+Apache-2.0

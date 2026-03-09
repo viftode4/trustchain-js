@@ -20,7 +20,7 @@
     "node": ">=20.0.0"
   },
   "keywords": ["trustchain", "trust", "agents", "decentralized", "bilateral-ledger"],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/viftode4/trustchain-js.git",

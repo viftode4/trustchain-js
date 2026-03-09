@@ -1,6 +1,6 @@
 {
   "name": "@trustchain/openclaw",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TrustChain plugin for OpenClaw — trust layer for autonomous AI agents",
   "type": "module",
   "main": "dist/index.js",
@@ -23,7 +23,10 @@
     "node": ">=20.0.0"
   },
   "keywords": ["trustchain", "openclaw", "plugin", "trust", "agents"],
-  "license": "MIT",
+  "openclaw": {
+    "extensions": ["./dist/index.js"]
+  },
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/viftode4/trustchain-js.git",

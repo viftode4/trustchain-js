@@ -1,4 +1,5 @@
 {
+  "id": "trustchain",
   "name": "@trustchain/openclaw",
   "displayName": "TrustChain",
   "description": "Decentralized trust layer for autonomous AI agents — bilateral signed interaction records with Sybil-resistant trust scores",
