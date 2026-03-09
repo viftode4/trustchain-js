@@ -1,4 +1,7 @@
 import { type ChildProcess, spawn } from "node:child_process";
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
 import { TrustChainClient } from "./client.js";
 import { SidecarError } from "./errors.js";
 import type {
@@ -73,6 +76,9 @@ export class TrustChainSidecar {
 
 	async start(): Promise<void> {
 		if (this._running) return;
+
+		// Kill any orphaned sidecar from a previous run with the same name
+		killOrphanedSidecar(this.options.name);
 
 		const binary = await ensureBinary(this.options.binary);
 		this._portBase = this.options.portBase ?? (await findFreePortBase());
@@ -149,6 +155,7 @@ export class TrustChainSidecar {
 		process.env.http_proxy = this.proxyUrl;
 
 		this._running = true;
+		writePidFile(this.options.name, this.process!.pid!);
 	}
 
 	stop(): void {
@@ -157,6 +164,7 @@ export class TrustChainSidecar {
 			this.process = null;
 		}
 		this._running = false;
+		removePidFile(this.options.name);
 
 		// Restore HTTP_PROXY
 		if (this.savedHttpProxy !== undefined) {
@@ -284,4 +292,51 @@ export class TrustChainSidecar {
 
 function sleep(ms: number): Promise<void> {
 	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// --- PID file management ---
+
+const PID_DIR = join(homedir(), ".trustchain", "pids");
+
+function pidFilePath(name: string): string {
+	// Sanitize name for filesystem safety
+	const safe = name.replace(/[^a-zA-Z0-9._-]/g, "_");
+	return join(PID_DIR, `${safe}.pid`);
+}
+
+function writePidFile(name: string, pid: number): void {
+	try {
+		mkdirSync(PID_DIR, { recursive: true });
+		writeFileSync(pidFilePath(name), String(pid), "utf8");
+	} catch {
+		// Best-effort — don't fail the sidecar over a PID file
+	}
+}
+
+function removePidFile(name: string): void {
+	try {
+		const p = pidFilePath(name);
+		if (existsSync(p)) unlinkSync(p);
+	} catch {
+		// Best-effort
+	}
+}
+
+function killOrphanedSidecar(name: string): void {
+	const p = pidFilePath(name);
+	try {
+		if (!existsSync(p)) return;
+		const pid = Number.parseInt(readFileSync(p, "utf8").trim(), 10);
+		if (Number.isNaN(pid) || pid <= 0) {
+			removePidFile(name);
+			return;
+		}
+		// Check if process is alive and kill it
+		process.kill(pid, 0); // Throws if process doesn't exist
+		process.kill(pid, "SIGTERM");
+		removePidFile(name);
+	} catch {
+		// Process already dead or permission error — clean up PID file
+		removePidFile(name);
+	}
 }
