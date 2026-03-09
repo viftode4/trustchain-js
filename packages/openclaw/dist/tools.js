@@ -19,6 +19,7 @@ export function createTools(getClient) {
 function checkTrustTool(getClient) {
     return {
         name: "trustchain_check_trust",
+        label: "Check Trust",
         description: "Check the trust score of a peer agent. Returns trust score, interaction count, and trust status.",
         parameters: {
             type: "object",
@@ -59,6 +60,7 @@ function checkTrustTool(getClient) {
 function discoverPeersTool(getClient) {
     return {
         name: "trustchain_discover_peers",
+        label: "Discover Peers",
         description: "Find capable agents ranked by trust score. Returns a list of agents with their capabilities and trust scores.",
         parameters: {
             type: "object",
@@ -107,6 +109,7 @@ function discoverPeersTool(getClient) {
 function recordInteractionTool(getClient) {
     return {
         name: "trustchain_record_interaction",
+        label: "Record Interaction",
         description: "Record a bilateral interaction with another agent. Creates a proposal and attempts to complete the handshake.",
         parameters: {
             type: "object",
@@ -154,6 +157,7 @@ function recordInteractionTool(getClient) {
 function verifyChainTool(getClient) {
     return {
         name: "trustchain_verify_chain",
+        label: "Verify Chain",
         description: "Verify the integrity of an agent's interaction chain. Checks for gaps, hash breaks, and signature failures.",
         parameters: {
             type: "object",
@@ -205,6 +209,7 @@ function verifyChainTool(getClient) {
 function getIdentityTool(getClient) {
     return {
         name: "trustchain_get_identity",
+        label: "Get Identity",
         description: "Get identity details and delegation information for a public key. Shows if the key is a successor and lists active delegations.",
         parameters: {
             type: "object",

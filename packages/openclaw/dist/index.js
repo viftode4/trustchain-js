@@ -22,6 +22,7 @@ export default function (api) {
     for (const tool of tools) {
         api.registerTool({
             name: tool.name,
+            label: tool.label,
             description: tool.description,
             parameters: tool.parameters,
             async execute(_id, params) {
@@ -30,7 +31,7 @@ export default function (api) {
                     content: [{ type: "text", text: result.content }],
                 };
             },
-        }, { optional: false });
+        }, { optional: true });
     }
     // Auto-start sidecar if configured
     if (autoStart) {

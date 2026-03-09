@@ -28,6 +28,7 @@ export default function (api: PluginAPI) {
 		api.registerTool(
 			{
 				name: tool.name,
+				label: tool.label,
 				description: tool.description,
 				parameters: tool.parameters,
 				async execute(_id: string, params: Record<string, unknown>) {
@@ -37,7 +38,7 @@ export default function (api: PluginAPI) {
 					};
 				},
 			},
-			{ optional: false },
+			{ optional: true },
 		);
 	}
 

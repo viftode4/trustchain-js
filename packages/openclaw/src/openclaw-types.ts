@@ -17,6 +17,7 @@ export interface Logger {
 
 export interface ToolRegistration {
 	name: string;
+	label: string;
 	description: string;
 	parameters: ToolParameters;
 	execute: (id: string, args: Record<string, unknown>) => Promise<ToolResult>;
@@ -42,6 +43,7 @@ export interface ToolResult {
 /** Internal tool format — tools.ts returns plain strings, index.ts wraps them for OpenClaw */
 export interface ToolDefinition {
 	name: string;
+	label: string;
 	description: string;
 	parameters: ToolParameters;
 	execute: (args: Record<string, unknown>) => Promise<InternalToolResult>;
