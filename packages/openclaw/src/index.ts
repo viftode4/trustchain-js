@@ -11,8 +11,13 @@ export { createHooks } from "./hooks.js";
  * Uses the api.registerTool() pattern expected by OpenClaw.
  */
 export default function (api: PluginAPI) {
-	const config = api.config;
-	const log = api.log;
+	const config = api.config ?? {};
+	const log = api.log ?? {
+		info: console.log,
+		warn: console.warn,
+		error: console.error,
+		debug: console.debug,
+	};
 
 	const service = new SidecarService(log);
 	const autoStart = (config.autoStart as boolean) ?? true;
