@@ -3,12 +3,8 @@ export { TrustChainSidecar } from "./sidecar.js";
 export * from "./types.js";
 export * from "./errors.js";
 export { findBinary, ensureBinary, findFreePortBase } from "./utils.js";
-export {
-	MAX_DELEGATION_TTL_MS,
-	validateSubDelegationScope,
-	validateDelegationTtlMs,
-	validateDelegationTtlSeconds,
-} from "./delegation.js";
+export { MAX_DELEGATION_TTL_MS, validateSubDelegationScope, validateDelegationTtlMs, validateDelegationTtlSeconds, } from "./delegation.js";
+export { AuditConfig, defaultEvents, validateBaseSchema, validateAiActSchema, validateAiuc1Schema, validateTransaction, } from "./audit.js";
 import { TrustChainClient } from "./client.js";
 import { validateDelegationTtlSeconds } from "./delegation.js";
 import { TrustChainSidecar } from "./sidecar.js";
@@ -18,10 +14,11 @@ let singleton = null;
  * Subsequent calls return the same instance.
  */
 export async function init(options) {
-	if (singleton?.isRunning) return singleton;
-	singleton = new TrustChainSidecar(options);
-	await singleton.start();
-	return singleton;
+    if (singleton?.isRunning)
+        return singleton;
+    singleton = new TrustChainSidecar(options);
+    await singleton.start();
+    return singleton;
 }
 /** Alias for init() — protect your agent with TrustChain. */
 export const protect = init;
@@ -32,22 +29,23 @@ export const protect = init;
  * Enforces the 30-day maximum TTL cap before making any network call.
  */
 export async function initDelegate(options) {
-	const ttlSeconds = options.ttlSeconds ?? 3600;
-	// Enforce 30-day TTL cap before making any network call.
-	validateDelegationTtlSeconds(ttlSeconds);
-	const sidecar = await init(options.sidecar);
-	const pubkey = sidecar.pubkey;
-	if (!pubkey) throw new Error("Sidecar started but pubkey not available");
-	// Request delegation from parent
-	const parentClient = new TrustChainClient({ baseUrl: options.parentUrl });
-	const delegationResp = await parentClient.delegate(pubkey, {
-		scope: options.scope,
-		ttl_seconds: ttlSeconds,
-	});
-	// Complete bilateral handshake
-	if (delegationResp.block) {
-		await sidecar.acceptDelegation(delegationResp.block);
-	}
-	return sidecar;
+    const ttlSeconds = options.ttlSeconds ?? 3600;
+    // Enforce 30-day TTL cap before making any network call.
+    validateDelegationTtlSeconds(ttlSeconds);
+    const sidecar = await init(options.sidecar);
+    const pubkey = sidecar.pubkey;
+    if (!pubkey)
+        throw new Error("Sidecar started but pubkey not available");
+    // Request delegation from parent
+    const parentClient = new TrustChainClient({ baseUrl: options.parentUrl });
+    const delegationResp = await parentClient.delegate(pubkey, {
+        scope: options.scope,
+        ttl_seconds: ttlSeconds,
+    });
+    // Complete bilateral handshake
+    if (delegationResp.block) {
+        await sidecar.acceptDelegation(delegationResp.block);
+    }
+    return sidecar;
 }
 //# sourceMappingURL=index.js.map

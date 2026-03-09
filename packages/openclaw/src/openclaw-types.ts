@@ -1,11 +1,11 @@
 /**
  * Type stubs for the OpenClaw plugin API.
- * Replace with official @openclaw/types when available.
  */
 
-export interface PluginContext {
-	config: Record<string, unknown>;
+export interface PluginAPI {
+	registerTool(definition: ToolRegistration, options?: { optional?: boolean }): void;
 	log: Logger;
+	config: Record<string, unknown>;
 }
 
 export interface Logger {
@@ -15,11 +15,11 @@ export interface Logger {
 	debug(message: string, ...args: unknown[]): void;
 }
 
-export interface ToolDefinition {
+export interface ToolRegistration {
 	name: string;
 	description: string;
 	parameters: ToolParameters;
-	execute: (args: Record<string, unknown>) => Promise<ToolResult>;
+	execute: (id: string, args: Record<string, unknown>) => Promise<ToolResult>;
 }
 
 export interface ToolParameters {
@@ -36,6 +36,18 @@ export interface ToolParameterProperty {
 }
 
 export interface ToolResult {
+	content: Array<{ type: string; text: string }>;
+}
+
+/** Internal tool format — tools.ts returns plain strings, index.ts wraps them for OpenClaw */
+export interface ToolDefinition {
+	name: string;
+	description: string;
+	parameters: ToolParameters;
+	execute: (args: Record<string, unknown>) => Promise<InternalToolResult>;
+}
+
+export interface InternalToolResult {
 	content: string;
 	isError?: boolean;
 }
@@ -45,6 +57,13 @@ export interface EventHook {
 	handler: (data: unknown) => Promise<void> | void;
 }
 
+/** @deprecated — old registration pattern */
+export interface PluginContext {
+	config: Record<string, unknown>;
+	log: Logger;
+}
+
+/** @deprecated — old registration pattern */
 export interface PluginRegistration {
 	tools: ToolDefinition[];
 	hooks?: EventHook[];

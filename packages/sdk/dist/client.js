@@ -21,6 +21,15 @@ export class TrustChainClient {
     async audit(transaction) {
         return this.post("/audit", { transaction: transaction ?? {} });
     }
+    async auditBatch(entries) {
+        return this.post("/audit-batch", { entries });
+    }
+    async auditReport() {
+        return this.get("/audit-report");
+    }
+    async exportChain() {
+        return this.get("/export-chain");
+    }
     async propose(counterpartyPubkey, transaction) {
         return this.post("/propose", {
             counterparty_pubkey: counterpartyPubkey,

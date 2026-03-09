@@ -1,4 +1,4 @@
-import type { AcceptDelegationResponse, AcceptSuccessionResponse, AuditResponse, ClientOptions, DelegationRecord, DelegationResponse, DiscoverOptions, DiscoverResponse, HalfBlock, HealthResponse, IdentityResponse, PeerInfo, ProposeResponse, ReceiveAgreementResponse, ReceiveProposalResponse, StatusResponse, TrustScoreResponse } from "./types.js";
+import type { AcceptDelegationResponse, AcceptSuccessionResponse, AuditBatchResponse, AuditReportResponse, AuditResponse, ClientOptions, DelegationRecord, DelegationResponse, DiscoverOptions, DiscoverResponse, ExportChainResponse, HalfBlock, HealthResponse, IdentityResponse, PeerInfo, ProposeResponse, ReceiveAgreementResponse, ReceiveProposalResponse, StatusResponse, TrustScoreResponse } from "./types.js";
 export declare class TrustChainClient {
     private readonly baseUrl;
     private readonly timeoutMs;
@@ -7,6 +7,9 @@ export declare class TrustChainClient {
     healthz(): Promise<HealthResponse>;
     metrics(): Promise<string>;
     audit(transaction: unknown): Promise<AuditResponse>;
+    auditBatch(entries: unknown[]): Promise<AuditBatchResponse>;
+    auditReport(): Promise<AuditReportResponse>;
+    exportChain(): Promise<ExportChainResponse>;
     propose(counterpartyPubkey: string, transaction?: unknown): Promise<ProposeResponse>;
     receiveProposal(proposal: HalfBlock): Promise<ReceiveProposalResponse>;
     receiveAgreement(agreement: HalfBlock): Promise<ReceiveAgreementResponse>;

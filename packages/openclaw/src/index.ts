@@ -1,5 +1,4 @@
-import { createHooks } from "./hooks.js";
-import type { PluginContext, PluginRegistration } from "./openclaw-types.js";
+import type { PluginAPI } from "./openclaw-types.js";
 import { SidecarService } from "./service.js";
 import { createTools } from "./tools.js";
 
@@ -8,37 +7,50 @@ export { createTools } from "./tools.js";
 export { createHooks } from "./hooks.js";
 
 /**
- * Register the TrustChain plugin with OpenClaw.
+ * OpenClaw plugin entry point.
+ * Uses the api.registerTool() pattern expected by OpenClaw.
  */
-export function register(ctx: PluginContext): PluginRegistration {
-	const config = ctx.config;
-	const log = ctx.log;
+export default function (api: PluginAPI) {
+	const config = api.config;
+	const log = api.log;
 
 	const service = new SidecarService(log);
 	const autoStart = (config.autoStart as boolean) ?? true;
-	const autoRecord = (config.autoRecord as boolean) ?? false;
 
+	// Register each tool with the OpenClaw API
 	const tools = createTools(() => service.getClient());
-	const hooks = createHooks(() => service.getClient(), log, autoRecord);
+	for (const tool of tools) {
+		api.registerTool(
+			{
+				name: tool.name,
+				description: tool.description,
+				parameters: tool.parameters,
+				async execute(_id: string, params: Record<string, unknown>) {
+					const result = await tool.execute(params);
+					return {
+						content: [{ type: "text", text: result.content }],
+					};
+				},
+			},
+			{ optional: false },
+		);
+	}
 
-	return {
-		tools,
-		hooks,
-		onStart: async () => {
-			if (!autoStart) {
-				log.info("TrustChain autoStart disabled. Use trustchain_check_trust to verify connection.");
-				return;
-			}
-			await service.start({
+	// Auto-start sidecar if configured
+	if (autoStart) {
+		service
+			.start({
 				binary: config.sidecarBinary as string | undefined,
 				portBase: config.portBase as number | undefined,
 				bootstrap: config.bootstrap as string[] | undefined,
 				logLevel: config.logLevel as string | undefined,
+			})
+			.then(() => {
+				log.info(`TrustChain sidecar ready — pubkey: ${service.pubkey}`);
+			})
+			.catch((err) => {
+				log.error(`TrustChain sidecar failed to start: ${err}`);
+				log.info("Use trustchain_check_trust to verify connection manually.");
 			});
-		},
-		onStop: () => {
-			service.stop();
-			return Promise.resolve();
-		},
-	};
+	}
 }

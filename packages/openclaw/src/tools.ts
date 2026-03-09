@@ -1,11 +1,11 @@
 import type { TrustChainClient } from "@trustchain/sdk";
-import type { ToolDefinition, ToolResult } from "./openclaw-types.js";
+import type { InternalToolResult, ToolDefinition } from "./openclaw-types.js";
 
-function ok(content: string): ToolResult {
+function ok(content: string): InternalToolResult {
 	return { content };
 }
 
-function err(message: string): ToolResult {
+function err(message: string): InternalToolResult {
 	return { content: message, isError: true };
 }
 
