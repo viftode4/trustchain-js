@@ -1,4 +1,4 @@
-# @trustchain/openclaw
+# openclaw-trustchain
 
 Decentralized trust layer for AI agents — bilateral signed interaction records with Sybil-resistant trust scores.
 
@@ -8,17 +8,17 @@ An [OpenClaw](https://clawhub.dev) plugin. Adds 5 tools to your agent that let i
 
 ```bash
 # npm
-npm install @trustchain/openclaw
+npm install openclaw-trustchain
 
 # bun
-bun add @trustchain/openclaw
+bun add openclaw-trustchain
 ```
 
 Register the plugin in your OpenClaw config by pointing at the manifest:
 
 ```json
 {
-  "plugins": ["@trustchain/openclaw"]
+  "plugins": ["openclaw-trustchain"]
 }
 ```
 
@@ -42,7 +42,7 @@ Example (OpenClaw plugin config section):
 ```json
 {
   "plugins": {
-    "@trustchain/openclaw": {
+    "openclaw-trustchain": {
       "autoStart": true,
       "autoRecord": true,
       "bootstrap": ["relay.trustchain.dev:8203"],
@@ -71,7 +71,7 @@ Five tools are registered under the `trustchain_` namespace. All tools communica
 ## Quick Start
 
 ```typescript
-import { register } from "@trustchain/openclaw";
+import { register } from "openclaw-trustchain";
 
 // Simulate what OpenClaw does internally
 const plugin = register({
@@ -149,4 +149,4 @@ If you run other plugins that make HTTP requests, be aware they will also be rou
 
 ## License
 
-MIT
+Apache-2.0
