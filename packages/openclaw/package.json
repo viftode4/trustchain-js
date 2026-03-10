@@ -1,6 +1,6 @@
 {
   "name": "@trustchain/openclaw",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "TrustChain plugin for OpenClaw — trust layer for autonomous AI agents",
   "type": "module",
   "main": "dist/index.js",
