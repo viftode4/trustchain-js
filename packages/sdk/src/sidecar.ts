@@ -45,7 +45,7 @@ export class TrustChainSidecar {
 
 	constructor(options?: SidecarOptions) {
 		this.options = {
-			name: options?.name ?? `ts-agent-${process.pid}`,
+			name: options?.name ?? "trustchain-default",
 			logLevel: options?.logLevel ?? "info",
 			...options,
 		};

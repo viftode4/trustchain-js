@@ -37,6 +37,7 @@ export default function (api) {
     if (autoStart) {
         service
             .start({
+            name: config.name ?? "openclaw",
             binary: config.sidecarBinary,
             portBase: config.portBase,
             bootstrap: config.bootstrap,
