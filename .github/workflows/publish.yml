@@ -48,7 +48,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @trustchain/openclaw
+      - name: Publish openclaw-trustchain
         continue-on-error: true
         working-directory: packages/openclaw
         run: npm publish --access public --provenance
