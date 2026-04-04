@@ -7,7 +7,7 @@ TypeScript SDK for TrustChain (universal trust primitive). Bun monorepo, zero ru
 ```sh
 bun install        # install all workspace deps
 bun run build      # tsc across all packages
-bun test           # run all tests (126 tests across packages)
+bun test           # run all tests (165 tests across packages)
 bun run lint       # biome check
 bun run format     # biome format --write
 ```

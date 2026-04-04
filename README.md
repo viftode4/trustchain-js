@@ -3,16 +3,16 @@
 [![CI](https://github.com/viftode4/trustchain-js/actions/workflows/ci.yml/badge.svg)](https://github.com/viftode4/trustchain-js/actions)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
-**TypeScript SDK for [TrustChain](https://github.com/viftode4/trustchain) — decentralized trust for AI agents.**
+**TypeScript SDK for [TrustChain](https://github.com/viftode4/trustchain) — portable identity, signed interaction history, and sidecar-managed coordination for agent networks.**
 
-Zero runtime dependencies. The `trustchain-node` binary downloads automatically on first use.
+Use the TypeScript SDK to start or connect to a TrustChain sidecar, record bilateral interactions, and add trust-aware discovery, delegation, audit, and routing primitives to existing agents. Zero runtime dependencies; the `trustchain-node` binary downloads automatically on first use.
 
 ## Packages
 
 | Package | Description |
 |---------|-------------|
 | [`@trustchain/sdk`](./packages/sdk) | HTTP client + sidecar process management. Zero runtime deps. |
-| [`@trustchain/openclaw`](./packages/openclaw) | OpenClaw plugin — 5 agent-facing trust tools. |
+| [`openclaw-trustchain`](./packages/openclaw) | OpenClaw plugin — 5 agent-facing coordination and trust tools. |
 
 ## Quick Start
 
@@ -62,15 +62,15 @@ const sidecar = await initDelegate({
 
 ## How It Works
 
-Every call to a known TrustChain peer triggers a bilateral trust handshake: both parties sign a half-block recording the interaction. Trust scores are computed from real interaction history using NetFlow analysis — fake identities cannot manufacture trust because they have no legitimate transaction graph.
+Every call to a known TrustChain peer triggers a bilateral handshake: both parties sign a half-block recording the interaction. Trust scores are computed from real interaction history using MeritRank (default) or NetFlow connectivity analysis, and the same history also supports audit, delegation, and trust-weighted discovery.
 
 The sidecar proxy runs locally on port 8203. Agents set `HTTP_PROXY=http://127.0.0.1:8203` and all inter-agent HTTP calls are automatically instrumented. No code changes to agent logic required.
 
-Trust is a number between 0.0 and 1.0, computed as **connectivity × integrity × diversity × recency** (v3 model):
-- **Connectivity** — MeritRank random walks (default) or NetFlow max-flow from seed nodes; Sybil attacks fail here
-- **Integrity** — hash-linked, Ed25519-signed interaction history
-- **Diversity** — distinct interaction partners
-- **Recency** — exponential decay weighting recent interactions
+Trust is a number between 0.0 and 1.0, computed as **(0.3 × structural + 0.7 × behavioral) × confidence_scale** (weighted-additive model, v4):
+- **structural** = connectivity × integrity — Sybil resistance × chain integrity
+- **behavioral** = recency (quality-weighted, λ=0.95) — recent interaction quality
+- **confidence_scale** = min(interactions / 5, 1.0) — new agents ramp up gradually
+- **connectivity** — MeritRank random walks (default) or NetFlow max-flow; `diversity` is evidence-only, not in final score
 
 Proven fraud results in a permanent hard-zero trust score.
 
@@ -94,7 +94,7 @@ await ensureBinary();
 ```bash
 bun install
 bun run build
-bun test        # 126 tests
+bun test        # 165 tests
 bun run lint    # biome check
 ```
 
@@ -113,6 +113,7 @@ Implements [draft-pouwelse-trustchain-01](https://datatracker.ietf.org/doc/draft
 - [trustchain](https://github.com/viftode4/trustchain) — Rust core: sidecar binary, QUIC P2P, MCP server
 - [trustchain-py](https://github.com/viftode4/trustchain-py) — Python SDK: `pip install trustchain-py`
 - [trustchain-agent-os](https://github.com/viftode4/trustchain-agent-os) — Agent framework adapters
+- [trustchain-economy](https://github.com/viftode4/trustchain-economy) — mechanism-design and adversarial evaluation engine for agent networks
 
 ## License
 

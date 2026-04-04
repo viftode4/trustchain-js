@@ -1,8 +1,8 @@
 # openclaw-trustchain
 
-Decentralized trust layer for AI agents — bilateral signed interaction records with Sybil-resistant trust scores.
+OpenClaw plugin for TrustChain, the interaction-record and coordination layer for autonomous agents and agent networks.
 
-An [OpenClaw](https://clawhub.dev) plugin. Adds 5 tools to your agent that let it check peer trust scores, discover vetted agents by capability, record signed interaction outcomes, and verify chain integrity. The TrustChain sidecar binary starts automatically and downloads itself if not already installed.
+Adds 5 tools that let agents inspect identity and trust state, discover peers by capability, record signed interaction outcomes, and verify chain integrity. The TrustChain sidecar starts automatically and downloads itself if not already installed, so agents can coordinate with evidence instead of blind trust.
 
 ## Install
 
