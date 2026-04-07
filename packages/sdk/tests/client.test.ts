@@ -299,14 +299,13 @@ describe("TrustChainClient", () => {
 			chain: [makeBlock({ block_type: "audit" })],
 			exported_at: 1700000000000,
 			chain_hash: "f".repeat(64),
-			signature: "s".repeat(128),
 		};
 		mockJsonResponse(data);
 		const resp = await client.exportChain();
 		expect(resp.pubkey).toBe("a".repeat(64));
 		expect(resp.chain).toHaveLength(1);
 		expect(resp.chain_hash).toBe("f".repeat(64));
-		expect(resp.signature).toBe("s".repeat(128));
+		expect("signature" in resp).toBe(false);
 
 		const { url, method } = extractCall(mockFetch);
 		expect(url).toBe(`${BASE_URL}/export-chain`);

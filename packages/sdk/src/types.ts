@@ -116,7 +116,6 @@ export interface ExportChainResponse {
 	chain: HalfBlock[];
 	exported_at: number;
 	chain_hash: string;
-	signature: string;
 }
 
 // --- Responses ---
