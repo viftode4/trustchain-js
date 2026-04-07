@@ -80,7 +80,6 @@ export interface ExportChainResponse {
     chain: HalfBlock[];
     exported_at: number;
     chain_hash: string;
-    signature: string;
 }
 export interface StatusResponse {
     public_key: string;
