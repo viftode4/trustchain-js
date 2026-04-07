@@ -155,6 +155,8 @@ export interface TrustScoreResponse {
     payment_reliability?: number | null;
     rating_fairness?: number | null;
     dispute_rate?: number | null;
+    current_tier?: "spot" | "standard" | "premium" | "enterprise";
+    max_transaction_value?: number;
 }
 export interface DiscoveredAgent {
     pubkey: string;
