@@ -396,6 +396,8 @@ describe("TrustChainClient", () => {
 			payment_reliability: 1.0,
 			rating_fairness: 0.92,
 			dispute_rate: 0.0,
+			current_tier: "premium",
+			max_transaction_value: 500,
 		};
 		mockJsonResponse(data);
 		const resp = await client.trustScore("a".repeat(64));
@@ -404,6 +406,8 @@ describe("TrustChainClient", () => {
 		expect(resp.requester_trust).toBe(0.84);
 		expect(resp.rating_fairness).toBe(0.92);
 		expect(resp.dispute_rate).toBe(0.0);
+		expect(resp.current_tier).toBe("premium");
+		expect(resp.max_transaction_value).toBe(500);
 	});
 
 	it("discover() sends GET /discover with query params", async () => {
