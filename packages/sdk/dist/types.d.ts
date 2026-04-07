@@ -132,6 +132,30 @@ export interface TrustScoreResponse {
     interaction_count: number;
     block_count: number;
     audit_count?: number;
+    avg_quality?: number;
+    value_weighted_recency?: number;
+    timeout_count?: number;
+    confidence?: number;
+    sample_size?: number;
+    positive_count?: number;
+    beta_reputation?: number | null;
+    required_deposit_ratio?: number;
+    sanction_penalty?: number;
+    violation_count?: number;
+    correlation_penalty?: number;
+    forgiveness_factor?: number;
+    good_interactions_since_violation?: number;
+    behavioral_change?: number;
+    behavioral_anomaly?: boolean;
+    selective_scamming?: boolean;
+    collusion_cluster_density?: number;
+    collusion_external_ratio?: number;
+    collusion_temporal_burst?: boolean;
+    collusion_reciprocity_anomaly?: boolean;
+    requester_trust?: number | null;
+    payment_reliability?: number | null;
+    rating_fairness?: number | null;
+    dispute_rate?: number | null;
 }
 export interface DiscoveredAgent {
     pubkey: string;

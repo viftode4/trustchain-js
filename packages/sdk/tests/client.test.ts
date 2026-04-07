@@ -358,6 +358,55 @@ describe("TrustChainClient", () => {
 		expect(method).toBe("GET");
 	});
 
+	it("trustScore() preserves the richer Rust trust-evidence bundle", async () => {
+		const data = {
+			pubkey: "a".repeat(64),
+			trust_score: 0.91,
+			interaction_count: 12,
+			block_count: 24,
+			connectivity: 0.7,
+			integrity: 1.0,
+			diversity: 0.4,
+			recency: 0.88,
+			unique_peers: 5,
+			interactions: 12,
+			fraud: false,
+			path_diversity: 1.25,
+			audit_count: 2,
+			avg_quality: 0.93,
+			value_weighted_recency: 0.89,
+			timeout_count: 1,
+			confidence: 0.81,
+			sample_size: 12,
+			positive_count: 11,
+			beta_reputation: 0.77,
+			required_deposit_ratio: 0.09,
+			sanction_penalty: 0.0,
+			violation_count: 0,
+			correlation_penalty: 0.0,
+			forgiveness_factor: 1.0,
+			good_interactions_since_violation: 7,
+			behavioral_change: -0.1,
+			behavioral_anomaly: false,
+			selective_scamming: false,
+			collusion_cluster_density: 0.0,
+			collusion_external_ratio: 1.0,
+			collusion_temporal_burst: false,
+			collusion_reciprocity_anomaly: false,
+			requester_trust: 0.84,
+			payment_reliability: 1.0,
+			rating_fairness: 0.92,
+			dispute_rate: 0.0,
+		};
+		mockJsonResponse(data);
+		const resp = await client.trustScore("a".repeat(64));
+		expect(resp.avg_quality).toBe(0.93);
+		expect(resp.beta_reputation).toBe(0.77);
+		expect(resp.requester_trust).toBe(0.84);
+		expect(resp.rating_fairness).toBe(0.92);
+		expect(resp.dispute_rate).toBe(0.0);
+	});
+
 	it("discover() sends GET /discover with query params", async () => {
 		mockJsonResponse({ agents: [], queried_peers: 3 });
 		await client.discover("math", { min_trust: 0.5, max_results: 10, fan_out: 3 });
